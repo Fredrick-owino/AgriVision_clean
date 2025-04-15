@@ -6,6 +6,7 @@ services:
     volumes:
       - ./backend:/app
       - ./models:/app/models
+      - ./media:/app/media 
     ports:
       - "8000:8000"
     environment:
@@ -17,6 +18,7 @@ services:
       PYTHONPATH: "/app"
     depends_on:
       - db
+    restart: unless-stopped   
 
   db:
     image: postgres:15

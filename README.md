@@ -1,4 +1,4 @@
-# AgriVision 🌾🚁
+# AgriVision_Clean 🌾🚁
 
 AgriVision is a drone-powered agricultural monitoring system that enables:
 
@@ -6,11 +6,15 @@ AgriVision is a drone-powered agricultural monitoring system that enables:
 - Crop/Fruit counting,  (YOLO )
 - Manual and drone-based image upload support
 
+---
+
 ## 🌐 Tech Stack
 
 - **Backend:** Django, Django REST Framework, PostgreSQL, Docker
-- **ML Models:** TensorFlow (disease), YOLOv4 (counting)
+- **ML Models:** TensorFlow (disease), YOLOv4/YOLOv8 (counting)
 - **Frontend:** React + Vite (handled by separate team)
+
+---
 
 ## 📦 Features
 
@@ -19,26 +23,12 @@ AgriVision is a drone-powered agricultural monitoring system that enables:
 - Multi-language support scaffold
 - Dockerized dev environment
 
+---
+
 ## 🚀 Getting Started (Dev)
 
-```bash
-git clone https://github.com/your-username/agrivision.git
-cd agrivision
-cp .env.example .env.dev
-docker-compose up --build
-```
-
-## 🛠 API Docs
-
-- Swagger: [http://localhost:8000/api/docs/swagger/](http://localhost:8000/api/docs/swagger/)
-- Redoc: [http://localhost:8000/api/docs/redoc/](http://localhost:8000/api/docs/redoc/)
-
-## 📁 Directory Structure
+### 1. Clone the Repo
 
 ```bash
-AgriVision/
-├── backend/        # Django app
-├── frontend/       # React app (Vite)
-├── models/         # ML models (disease + YOLO)
-└── docker-compose.yml
-
+git clone https://github.com/Fredrick-owino/AgriVision_clean.git
+cd AgriVision_clean

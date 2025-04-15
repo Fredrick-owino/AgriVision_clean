@@ -2,18 +2,18 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Virtual environment
-venv/
-ENV/
-env/
-env.bak/
-.venv/
-
-# Django stuff:
 *.log
-*.pot
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+
+# Python/Django specific
 *.pyc
+*.pot
 *.sqlite3
 db.sqlite3
 media/
@@ -28,10 +28,11 @@ local_settings.py
 .vscode/
 .idea/
 
-# Node (if frontend later uses it)
+# Node modules (frontend)
 node_modules/
+dist/
 
-# Model files (to avoid GitHub size limit errors)
+# Model files (ML)
 *.h5
 *.hdf5
 *.keras
@@ -41,18 +42,18 @@ node_modules/
 *.onnx
 *.pb
 *.ckpt
-
-# TensorFlow / PyTorch specific
 *.pbtxt
 *.npy
 *.npz
 
-# Colab notebooks checkpoints
+# Jupyter / Colab notebooks
 .ipynb_checkpoints/
 
-# Docker
+# Docker files
 *.pid
 *.seed
 *.swp
-.DS_Store
 docker-compose.override.yml
+
+# macOS
+.DS_Store

@@ -160,6 +160,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'AgriVision API',
-    'DESCRIPTION': 'Drone-powered plant disease detection system.',
+    'DESCRIPTION': 'Drone-powered plant disease detection and YOLO-based apple counting  system.',
     'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
