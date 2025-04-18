@@ -1,55 +1,42 @@
-import React from 'react';
-import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import React from "react";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
-function Footer() {
+const Footer = () => {
   return (
-    <footer className="bg-white shadow-md mt-auto">
-      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">AgriVision</h3>
-            <p className="text-gray-600">
-              Empowering farmers with AI-powered crop disease detection and monitoring.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><a href="/about" className="text-gray-600 hover:text-green-600">About Us</a></li>
-              <li><a href="/predict" className="text-gray-600 hover:text-green-600">Disease Prediction</a></li>
-              <li><a href="/contact" className="text-gray-600 hover:text-green-600">Contact</a></li>
-              <li><a href="/api-docs" className="text-gray-600 hover:text-green-600">API Documentation</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Connect With Us</h3>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-600 hover:text-green-600">
-                <Github className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-600 hover:text-green-600">
-                <Twitter className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-600 hover:text-green-600">
-                <Linkedin className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-600 hover:text-green-600">
-                <Mail className="h-6 w-6" />
-              </a>
-            </div>
-          </div>
+    <footer className="bg-black text-gray-400 py-10 px-6 border-t border-zinc-800">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+        {/* Branding */}
+        <div className="text-center md:text-left">
+          <h2 className="text-white text-xl font-bold mb-1">AgriVision</h2>
+          <p className="text-sm">Empowering sustainable farming with AI.</p>
         </div>
-        
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <p className="text-center text-gray-500">
-            © {new Date().getFullYear()} AgriVision. All rights reserved.
-          </p>
+
+        {/* Links */}
+        <div className="space-x-6 text-sm">
+          <a href="/" className="hover:text-white">Home</a>
+          <a href="/about" className="hover:text-white">About</a>
+          <a href="/contact" className="hover:text-white">Contact</a>
         </div>
+
+        {/* Social Icons */}
+        <div className="flex space-x-4">
+          <a href="#" className="hover:text-white"><FaGithub size={20} /></a>
+          <a href="#" className="hover:text-white"><FaLinkedin size={20} /></a>
+          <a href="#" className="hover:text-white"><FaTwitter size={20} /></a>
+        </div>
+      </div>
+
+      {/* Attribution */}
+      <div className="text-center text-xs text-gray-600 mt-6 space-y-1">
+        <p>
+          &copy; {new Date().getFullYear()} AgriVision. Made with <span className="text-white">❤️</span> by Fredrick Onyango & Ian Muriuki.
+        </p>
+        <p>
+          Technical University of Mombasa &bull; IEEE Dataport Hackathon 2025
+        </p>
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

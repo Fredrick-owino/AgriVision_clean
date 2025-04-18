@@ -7,6 +7,8 @@ urlpatterns = [
     path('predict/disease/drone/', views.DroneImageUploadAPIView.as_view(), name='predict-disease-drone'),
     path('predict/disease/classes/', views.DiseaseClassListAPIView.as_view(), name='disease-classes'),
     path('predict/disease/legacy/', views.drone_upload_predict, name='predict-disease-legacy'),
+    path('preview/tmp/test/', views.test_preview_debug),
+
 
     # Apple detection (YOLOv8) endpoint
     path('predict/apple/', views.detect_apples_yolo, name='predict-apples'),

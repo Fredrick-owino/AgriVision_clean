@@ -18,15 +18,15 @@ def detect_apples_from_image(image_path):
 
     count = len(results.boxes)
 
-    # 🧮 Draw total apple count on top
+    # Annotate total count
     cv2.putText(img, f"Total Apples: {count}", (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)  # Blue text
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)
 
     for box in results.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         conf = float(box.conf[0])
         label = f"Apple {conf:.2f}"
-        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)  # 🟦 Blue box
+        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
         cv2.putText(img, label, (x1, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
@@ -40,27 +40,33 @@ def detect_apples_from_image(image_path):
         "output_path": str(output_path)
     }
 
-
 def detect_apples_from_video(video_path):
     cap = cv2.VideoCapture(video_path)
+
+    if not cap.isOpened():
+        raise IOError("Could not open video file.")
+
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     out_path = OUTPUT_DIR / f"apple_{uuid.uuid4().hex}.mp4"
-    out = None
+    out = cv2.VideoWriter(str(out_path), fourcc, fps, (width, height))
 
     total_count = 0
     frame_count = 0
 
-    while cap.isOpened():
+    while True:
         ret, frame = cap.read()
         if not ret:
             break
 
         results = model(frame)[0]
-        frame_count += 1
         count_in_frame = len(results.boxes)
         total_count += count_in_frame
+        frame_count += 1
 
-        # 🧮 Add total detected apples on each frame
+        # Add frame-level count
         cv2.putText(frame, f"Apples in Frame: {count_in_frame}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)
 
@@ -72,15 +78,10 @@ def detect_apples_from_video(video_path):
             cv2.putText(frame, label, (x1, y1 - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
-        if out is None:
-            h, w = frame.shape[:2]
-            out = cv2.VideoWriter(str(out_path), fourcc, cap.get(cv2.CAP_PROP_FPS), (w, h))
-
         out.write(frame)
 
     cap.release()
-    if out:
-        out.release()
+    out.release()
 
     return {
         "count": total_count,
@@ -89,8 +90,7 @@ def detect_apples_from_video(video_path):
         "output_path": str(out_path)
     }
 
-
-# ✅ Unified handler for YOLO inference on image or video
+# Unified handler
 def run_yolo_inference(file_path):
     ext = Path(file_path).suffix.lower()
     if ext in [".jpg", ".jpeg", ".png", ".bmp"]:

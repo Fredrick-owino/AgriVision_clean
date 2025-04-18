@@ -22,7 +22,10 @@ import urllib.parse
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(BASE_DIR.parent))  # <- this points to the root of your project
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -149,10 +152,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # frontend dev server
-    # add staging/production domains here later
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',

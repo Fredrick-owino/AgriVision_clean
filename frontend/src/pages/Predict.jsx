@@ -1,140 +1,165 @@
-import React, { useState, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Upload, Loader } from 'lucide-react';
-import toast from 'react-hot-toast';
-import api from '../services/api';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function Predict() {
-  // State management for prediction flow
-  const [isLoading, setIsLoading] = useState(false);
-  const [prediction, setPrediction] = useState(null);
-  const [isDroneImage, setIsDroneImage] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
+const Predict = () => {
+  const [diseaseFile, setDiseaseFile] = useState(null);
+  const [diseaseResult, setDiseaseResult] = useState(null);
+  const [diseaseLoading, setDiseaseLoading] = useState(false);
 
-  // Handle file drop using react-dropzone
-  const onDrop = useCallback(async (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
+  const [fruitFile, setFruitFile] = useState(null);
+  const [fruitResult, setFruitResult] = useState(null);
+  const [fruitLoading, setFruitLoading] = useState(false);
 
-    // Create preview URL for the uploaded image
-    setPreviewUrl(URL.createObjectURL(file));
-    setIsLoading(true);
-    setPrediction(null);
+  const handleDiseaseSubmit = async (e) => {
+    e.preventDefault();
+    if (!diseaseFile) return;
+
+    setDiseaseLoading(true);
+    setDiseaseResult(null);
+
+    const formData = new FormData();
+    formData.append('image', diseaseFile);
 
     try {
-      // Call appropriate API based on image type
-      const result = isDroneImage 
-        ? await api.predictDroneImage(file)
-        : await api.predictDisease(file);
-      
-      setPrediction(result);
-      toast.success('Analysis complete!');
-    } catch (error) {
-      console.error('Prediction error:', error);
-      toast.error('Failed to analyze image. Please try again.');
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/predict/disease/`, formData);
+      setDiseaseResult(res.data); // response is flat dict
+    } catch (err) {
+      console.error('Disease prediction error:', err);
+      alert('Disease prediction failed. Try again.');
     } finally {
-      setIsLoading(false);
+      setDiseaseLoading(false);
     }
-  }, [isDroneImage]);
+  };
 
-  // Dropzone configuration
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'image/*': ['.jpeg', '.jpg', '.png']
-    },
-    maxFiles: 1
-  });
+  const handleFruitSubmit = async (e) => {
+    e.preventDefault();
+    if (!fruitFile) return;
+
+    setFruitLoading(true);
+    setFruitResult(null);
+
+    const formData = new FormData();
+    formData.append('file', fruitFile);
+
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/predict/apple/`, formData);
+      setFruitResult(res.data);
+    } catch (err) {
+      console.error('Fruit count error:', err);
+      alert('Fruit counting failed. Try again.');
+    } finally {
+      setFruitLoading(false);
+    }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-        Crop Disease Detection
-      </h1>
+    <div className="min-h-screen bg-black text-white py-12 px-4 sm:px-8 space-y-20">
+      {/* Disease Detection Section */}
+      <section className="max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6">🌿 Disease Detection</h2>
+        <form onSubmit={handleDiseaseSubmit} className="mb-6 space-y-4">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setDiseaseFile(e.target.files[0])}
+            className="w-full text-sm text-gray-300"
+          />
+          <button
+            type="submit"
+            disabled={!diseaseFile || diseaseLoading}
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md disabled:opacity-50"
+          >
+            {diseaseLoading ? 'Analyzing...' : 'Submit'}
+          </button>
+        </form>
 
-      {/* Image type selector */}
-      <div className="mb-8 flex justify-center gap-4">
-        <button
-          onClick={() => setIsDroneImage(false)}
-          className={`px-4 py-2 rounded-md ${
-            !isDroneImage 
-              ? 'bg-green-600 text-white' 
-              : 'bg-gray-100 text-gray-700'
-          }`}
-        >
-          Regular Image
-        </button>
-        <button
-          onClick={() => setIsDroneImage(true)}
-          className={`px-4 py-2 rounded-md ${
-            isDroneImage 
-              ? 'bg-green-600 text-white' 
-              : 'bg-gray-100 text-gray-700'
-          }`}
-        >
-          Drone Image
-        </button>
-      </div>
-
-      {/* Upload area */}
-      <div
-        {...getRootProps()}
-        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
-          ${isDragActive ? 'border-green-500 bg-green-50' : 'border-gray-300'}
-        `}
-      >
-        <input {...getInputProps()} />
-        <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-600">
-          {isDragActive
-            ? 'Drop the image here...'
-            : 'Drag & drop an image here, or click to select'}
-        </p>
-        <p className="text-sm text-gray-500 mt-2">
-          Supported formats: JPEG, JPG, PNG
-        </p>
-      </div>
-
-      {/* Preview and results section */}
-      {(previewUrl || isLoading || prediction) && (
-        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
-          {previewUrl && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Uploaded Image</h3>
-              <img
-                src={previewUrl}
-                alt="Preview"
-                className="max-h-64 mx-auto rounded-lg"
-              />
+        {diseaseResult && (
+          <div className="grid md:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-xl shadow-lg">
+            <div>
+              <h4 className="text-lg font-semibold mb-2">Input Image</h4>
+              <img src={URL.createObjectURL(diseaseFile)} alt="Input" className="rounded-md" />
             </div>
-          )}
-
-          {isLoading && (
-            <div className="text-center py-4">
-              <Loader className="h-8 w-8 animate-spin text-green-600 mx-auto" />
-              <p className="mt-2 text-gray-600">Analyzing image...</p>
+            <div>
+              <h4 className="text-lg font-semibold mb-2">Disease Prediction Details</h4>
+              <ul className="space-y-2 text-base">
+                <li><strong>Label:</strong> {diseaseResult.label}</li>
+                <li><strong>Confidence:</strong> {(diseaseResult.confidence * 100).toFixed(2)}%</li>
+                <li><strong>Plant:</strong> {diseaseResult.plant}</li>
+                <li><strong>Disease:</strong> {diseaseResult.disease}</li>
+                <li><strong>Control Measures:</strong> {diseaseResult.control_measures}</li>
+                <li><strong>Chemicals:</strong> {diseaseResult.chemicals}</li>
+              </ul>
             </div>
-          )}
+          </div>
+        )}
+      </section>
 
-          {prediction && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Results</h3>
-              <div className="bg-gray-50 p-4 rounded-md">
-                <p className="text-gray-700">
-                  <span className="font-medium">Disease:</span>{' '}
-                  {prediction.disease}
-                </p>
-                <p className="text-gray-700">
-                  <span className="font-medium">Confidence:</span>{' '}
-                  {(prediction.confidence * 100).toFixed(2)}%
-                </p>
-              </div>
+      {/* Fruit Counting Section */}
+      <section className="max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6">🍎 Fruit Counting</h2>
+        <form onSubmit={handleFruitSubmit} className="mb-6 space-y-4">
+          <input
+            type="file"
+            accept="image/*,video/*"
+            onChange={(e) => setFruitFile(e.target.files[0])}
+            className="w-full text-sm text-gray-300"
+          />
+          <button
+            type="submit"
+            disabled={!fruitFile || fruitLoading}
+            className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md disabled:opacity-50"
+          >
+            {fruitLoading ? 'Counting...' : 'Submit'}
+          </button>
+        </form>
+
+        {fruitResult && (
+          <div className="grid md:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-xl shadow-lg">
+            {/* Input File Preview */}
+            <div>
+              <h4 className="text-lg font-semibold mb-2">Input</h4>
+              {fruitFile?.type?.startsWith("video") ? (
+                <video
+                  src={URL.createObjectURL(fruitFile)}
+                  controls
+                  className="rounded-md w-full max-h-[400px]"
+                />
+              ) : (
+                <img
+                  src={URL.createObjectURL(fruitFile)}
+                  alt="Input"
+                  className="rounded-md"
+                />
+              )}
             </div>
-          )}
-        </div>
-      )}
+
+            {/* Annotated Detection Output */}
+            <div>
+              <h4 className="text-lg font-semibold mb-2">Detection Result</h4>
+              {fruitFile?.type?.startsWith("video") ? (
+                <video
+                  src={fruitResult?.preview_inline || fruitResult?.media_url}
+                  controls
+                  className="rounded-md w-full max-h-[400px]"
+                />
+              ) : (
+                <img
+                  src={fruitResult?.preview_inline || fruitResult?.media_url}
+                  alt="Detected"
+                  className="rounded-md"
+                />
+              )}
+            </div>
+
+            {/* Fruit Count Summary */}
+            <div className="col-span-2 mt-4 text-center text-lg">
+              <p><strong>Fruits Counted:</strong> {fruitResult.count}</p>
+            </div>
+          </div>
+        )}
+      </section>
     </div>
   );
-}
+};
 
 export default Predict;

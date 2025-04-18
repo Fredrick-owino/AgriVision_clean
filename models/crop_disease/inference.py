@@ -2,34 +2,16 @@ import tensorflow as tf
 import numpy as np
 import os
 from django.conf import settings
+from api.disease_insights import disease_insights  # ✅ Import disease insights
 
 class DiseaseDetector:
     def __init__(self):
         model_path = os.path.join(os.path.dirname(__file__), 'trained_model.keras')
         self.model = tf.keras.models.load_model(model_path)
-        print("\n✅ Model Loaded Successfully\n")
+        print("\n✅ Disease Detection Model Loaded Successfully\n")
 
-    def predict(self, img_path):
-        # Load the image with the target size for your model
-        img = tf.keras.preprocessing.image.load_img(img_path, target_size=(128, 128))
-        
-        # Convert the image to a numpy array
-        img_array = tf.keras.preprocessing.image.img_to_array(img)
-        
-        # Normalize the image array
-        img_array /= 255.0
-        
-        # Expand the dimensions so the input is (1, 224, 224, 3)
-        img_array = np.expand_dims(img_array, axis=0)
-        
-        # Make predictions using your model
-        predictions = self.model.predict(img_array)
-        predicted_index = np.argmax(predictions, axis=1)[0]
-        confidence = float(np.max(predictions))
-          # Get the index of the highest probability class
-
-        # List of class labels
-        class_labels = [
+        # Class names – make sure they match training order
+        self.class_labels = [
             'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
             'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew', 'Cherry_(including_sour)___healthy',
             'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot', 'Corn_(maize)___Common_rust_',
@@ -44,6 +26,31 @@ class DiseaseDetector:
             'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus', 'Tomato___healthy'
         ]
 
-        # Return the class label of the predicted class
-        result = class_labels[predicted_index]
-        return {"label": result, "confidence": round(confidence, 4)}
+    def predict(self, img_path):
+        # Load and preprocess the image
+        img = tf.keras.preprocessing.image.load_img(img_path, target_size=(128, 128))
+        img_array = tf.keras.preprocessing.image.img_to_array(img).astype(np.float32)
+        img_array /= 255.0
+        img_array = np.expand_dims(img_array, axis=0)
+
+        # Model prediction
+        predictions = self.model.predict(img_array)
+        predicted_index = int(np.argmax(predictions[0]))
+        confidence = float(np.max(predictions[0]))
+
+        label = self.class_labels[predicted_index]
+        insights = disease_insights.get(label, {
+            "plant": "Unknown",
+            "disease": "Unknown",
+            "control_measures": "No control measures available.",
+            "chemicals": "No chemical recommendations available."
+        })
+
+        return {
+            "label": label,
+            "confidence": round(confidence, 4),
+            "plant": insights["plant"],
+            "disease": insights["disease"],
+            "control_measures": insights["control_measures"],
+            "chemicals": insights["chemicals"]
+        }

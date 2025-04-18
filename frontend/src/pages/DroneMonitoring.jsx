@@ -1,122 +1,177 @@
-import React, { useState, useEffect } from 'react';
-import { Activity, AlertCircle, CheckCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
-import api from '../services/api';
+import React, { useRef, useState, useEffect } from 'react';
+import axios from 'axios';
 
-function DroneMonitoring() {
-  const [droneStatus, setDroneStatus] = useState('active');
-  const [lastImage, setLastImage] = useState(null);
-  const [predictions, setPredictions] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+const DroneMonitoring = () => {
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [media, setMedia] = useState(null);
+  const [stream, setStream] = useState(null);
+  const [streaming, setStreaming] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
 
-  // Simulated drone data - replace with real API calls
-  const monitoringStats = {
-    totalScans: 145,
-    activeAreas: 3,
-    lastScanTime: new Date().toLocaleTimeString(),
-    batteryLevel: '85%'
-  };
+  const dummyBoxes = [
+    { x: 100, y: 80, width: 120, height: 60, label: 'Fruit', confidence: 0.94 },
+    { x: 260, y: 150, width: 100, height: 70, label: 'Fruit', confidence: 0.88 },
+  ];
 
-  useEffect(() => {
-    // Simulated real-time updates
-    const interval = setInterval(() => {
-      // This would be replaced with actual API polling
-      setDroneStatus(prev => prev === 'active' ? 'scanning' : 'active');
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'active': return 'text-green-500';
-      case 'scanning': return 'text-blue-500';
-      case 'warning': return 'text-yellow-500';
-      default: return 'text-gray-500';
+  const startStream = async () => {
+    try {
+      const streamData = await navigator.mediaDevices.getUserMedia({ video: true });
+      setStream(streamData);
+      if (videoRef.current) {
+        videoRef.current.srcObject = streamData;
+        setStreaming(true);
+      }
+    } catch (err) {
+      console.error('Webcam error:', err);
     }
   };
 
+  const stopStream = () => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStreaming(false);
+    }
+  };
+
+  const drawDetections = (boxes) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx || !videoRef.current) return;
+
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    boxes.forEach((box) => {
+      ctx.strokeStyle = '#00FFFF';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(box.x, box.y, box.width, box.height);
+      ctx.fillStyle = '#00FFFF';
+      ctx.font = '14px sans-serif';
+      ctx.fillText(`${box.label} (${Math.round(box.confidence * 100)}%)`, box.x, box.y - 6);
+    });
+  };
+
+  useEffect(() => {
+    let interval;
+    if (streaming) {
+      interval = setInterval(() => {
+        drawDetections(dummyBoxes); // Replace with actual model output if available
+      }, 500);
+    }
+    return () => clearInterval(interval);
+  }, [streaming]);
+
+  useEffect(() => {
+    return () => stopStream();
+  }, []);
+
+  const handleFileChange = (e) => {
+    setMedia(e.target.files[0]);
+    setResult(null);
+    setError('');
+  };
+
+  const handleUpload = async () => {
+    if (!media) return;
+    const formData = new FormData();
+    formData.append('file', media);
+    try {
+      setLoading(true);
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/predict/apple/`, formData);
+      setResult(res.data);
+    } catch (err) {
+      setError('Prediction failed. Please try a different file.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isVideo = (filename) => {
+    return filename && (filename.endsWith('.mp4') || filename.endsWith('.mov') || filename.endsWith('.avi'));
+  };
+
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Drone Monitoring System</h1>
-        <p className="mt-2 text-gray-600">Real-time crop monitoring and disease detection</p>
-      </div>
+    <section className="min-h-screen bg-black text-white py-20 px-6 sm:px-10">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center">Drone-Based Fruit Monitoring</h1>
+        <p className="text-center text-gray-400 mb-10">
+          Live detection via webcam/drone or upload drone footage for AI-powered fruit counting.
+        </p>
 
-      {/* Status Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">Drone Status</h3>
-            <Activity className={`h-5 w-5 ${getStatusColor(droneStatus)}`} />
+        {/* Live Streaming Section */}
+        <h2 className="text-xl font-semibold text-blue-400 mb-4">Live Streaming (Drone)</h2>
+        <div className="relative bg-gray-900 rounded overflow-hidden shadow mb-8">
+          <video ref={videoRef} autoPlay muted playsInline className="w-full h-auto rounded" />
+          <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full pointer-events-none" />
+        </div>
+
+        <div className="flex justify-center gap-4 mb-16">
+          <button
+            onClick={startStream}
+            disabled={streaming}
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded disabled:opacity-50"
+          >
+            Start Streaming
+          </button>
+          <button
+            onClick={stopStream}
+            disabled={!streaming}
+            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded disabled:opacity-50"
+          >
+            Stop Streaming
+          </button>
+        </div>
+
+        {/* Upload Prediction */}
+        {!streaming && (
+          <div className="bg-gray-900 p-6 rounded shadow text-center">
+            <input
+              type="file"
+              accept="image/*,video/*"
+              onChange={handleFileChange}
+              className="mb-4 text-sm text-gray-300 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+            />
+            <button
+              onClick={handleUpload}
+              disabled={!media || loading}
+              className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white font-semibold disabled:opacity-50"
+            >
+              {loading ? 'Processing...' : 'Upload & Predict'}
+            </button>
+
+            {error && <p className="text-red-500 mt-4">{error}</p>}
+
+            {result && (
+              <div className="mt-8">
+                <p className="text-green-400 font-semibold text-lg mb-4">
+                  Detected Count: {result.count}
+                </p>
+                <div>
+                  {isVideo(result.preview_inline || result.media_url) ? (
+                    <video
+                      src={result.preview_inline || result.media_url}
+                      controls
+                      className="rounded shadow w-full"
+                    />
+                  ) : (
+                    <img
+                      src={result.preview_inline || result.media_url}
+                      alt="Prediction result"
+                      className="rounded shadow w-full"
+                    />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-          <p className="mt-2 text-2xl font-semibold capitalize">{droneStatus}</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-medium text-gray-900">Total Scans Today</h3>
-          <p className="mt-2 text-2xl font-semibold">{monitoringStats.totalScans}</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-medium text-gray-900">Active Areas</h3>
-          <p className="mt-2 text-2xl font-semibold">{monitoringStats.activeAreas}</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-medium text-gray-900">Battery Level</h3>
-          <p className="mt-2 text-2xl font-semibold">{monitoringStats.batteryLevel}</p>
-        </div>
+        )}
       </div>
-
-      {/* Live Feed Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4">Live Drone Feed</h3>
-            <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
-              {lastImage ? (
-                <img 
-                  src={lastImage} 
-                  alt="Latest drone capture" 
-                  className="rounded-lg object-cover w-full h-full"
-                />
-              ) : (
-                <p className="text-gray-500">Awaiting drone feed...</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="lg:col-span-1">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4">Recent Detections</h3>
-            <div className="space-y-4">
-              {predictions.length > 0 ? (
-                predictions.map((prediction, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                    {prediction.confidence > 0.7 ? (
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-1" />
-                    ) : (
-                      <AlertCircle className="h-5 w-5 text-yellow-500 mt-1" />
-                    )}
-                    <div>
-                      <p className="font-medium">{prediction.disease}</p>
-                      <p className="text-sm text-gray-500">
-                        Confidence: {(prediction.confidence * 100).toFixed(1)}%
-                      </p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">No recent detections</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </section>
   );
-}
+};
 
 export default DroneMonitoring;

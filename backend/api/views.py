@@ -19,10 +19,15 @@ from urllib.parse import unquote as urlunquote
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_spectacular.utils import extend_schema, OpenApiResponse
+from django.http import JsonResponse
 
 import logging
-
 logger = logging.getLogger(__name__)
+
+
+def test_preview_debug(request):
+    return JsonResponse({"message": "✅ preview route working"})
+
 
 # Load model globally
 try:
@@ -40,6 +45,7 @@ def format_error(message, code, details=None):
             "details": details
         }
     }
+
 
 def save_uploaded_file(uploaded_file, suffix=".jpg"):
     temp_dir = os.path.join(settings.MEDIA_ROOT, "tmp")
@@ -86,7 +92,7 @@ class DiseasePredictionAPIView(APIView):
         try:
             temp_path = save_uploaded_file(image)
             prediction = detector.predict(temp_path)
-            return Response({"prediction": prediction}, status=status.HTTP_200_OK)
+            return Response(prediction, status=status.HTTP_200_OK)
         except Exception as e:
             logger.exception("Prediction error:")
             return Response(
@@ -117,11 +123,7 @@ class DroneImageUploadAPIView(APIView):
 
             prediction = detector.predict(full_image_path)
 
-            return Response({
-                "prediction": prediction['label'],
-                "confidence": prediction['confidence'],
-            }, status=status.HTTP_200_OK)
-
+            return Response(prediction, status=status.HTTP_200_OK)
         except Exception as e:
             logger.exception("Drone image prediction error:")
             return Response(
@@ -204,7 +206,11 @@ def detect_apples_yolo(request):
 
 
 def preview_processed_file(request, filename):
-    file_path = os.path.join(settings.MEDIA_ROOT, "tmp", urlunquote(filename))
+    tmp_path = os.path.join(settings.MEDIA_ROOT, "tmp", urlunquote(filename))
+    processed_path = os.path.join(settings.MEDIA_ROOT, "processed", urlunquote(filename))
+
+    file_path = tmp_path if os.path.exists(tmp_path) else processed_path
+
     if not os.path.exists(file_path):
         raise Http404("File not found.")
 

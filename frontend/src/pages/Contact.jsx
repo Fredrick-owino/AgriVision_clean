@@ -1,160 +1,107 @@
+// src/pages/Contact.jsx
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
-function Contact() {
-  // Form state management
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
+const Contact = () => {
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState('');
 
-  // Handle form input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Implement actual form submission
-    console.log('Form submitted:', formData);
-    toast.success('Message sent successfully!');
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-    });
+    // Simulate form submission
+    setTimeout(() => {
+      setStatus('Thank you for reaching out! We will get back to you shortly.');
+      setForm({ name: '', email: '', message: '' });
+    }, 1000);
   };
 
   return (
-    <div className="py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900 text-center mb-12">
-          Contact Us
-        </h1>
+    <section className="bg-black text-white min-h-screen py-20 px-6 sm:px-12">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-extrabold mb-4">Get in Touch</h1>
+          <p className="text-gray-400 max-w-xl mx-auto">
+            Have a question, feedback, or need support? Reach out to the AgriVision team — we're happy to help!
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Get in Touch
-            </h2>
-            <p className="text-gray-600">
-              Have questions about AgriVision? We're here to help!
-              Reach out to us through any of these channels.
-            </p>
-
-            <div className="space-y-6">
-              <div className="flex items-center">
-                <Mail className="h-6 w-6 text-green-600 mr-3" />
-                <span className="text-gray-600">contact@agrivision.com</span>
+        <div className="grid md:grid-cols-2 gap-10">
+          {/* Contact Info */}
+          <div className="bg-gray-900 p-8 rounded-xl shadow-md space-y-6">
+            <div className="flex items-start gap-4">
+              <FaPhoneAlt className="text-blue-400 mt-1" />
+              <div>
+                <h3 className="text-lg font-semibold">Phone</h3>
+                <p className="text-gray-300">+254 705 199 500</p>
               </div>
-              <div className="flex items-center">
-                <Phone className="h-6 w-6 text-green-600 mr-3" />
-                <span className="text-gray-600">+254 795953801</span>
+            </div>
+            <div className="flex items-start gap-4">
+              <FaEnvelope className="text-blue-400 mt-1" />
+              <div>
+                <h3 className="text-lg font-semibold">Email</h3>
+                <p className="text-gray-300">contact@agrivision.ai</p>
               </div>
-              <div className="flex items-center">
-                <MapPin className="h-6 w-6 text-green-600 mr-3" />
-                <span className="text-gray-600">
-                  123 Agrivision mombasa ke
-                </span>
+            </div>
+            <div className="flex items-start gap-4">
+              <FaMapMarkerAlt className="text-blue-400 mt-1" />
+              <div>
+                <h3 className="text-lg font-semibold">Location</h3>
+                <p className="text-gray-300"> Mombasa, Kenya</p>
               </div>
             </div>
           </div>
 
           {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="bg-gray-900 p-8 rounded-xl shadow-md space-y-6">
             <div>
-              <label 
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Name
-              </label>
+              <label className="block mb-2 text-sm font-semibold">Your Name</label>
               <input
                 type="text"
-                id="name"
                 name="name"
-                value={formData.name}
+                value={form.name}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-blue-500"
               />
             </div>
-
             <div>
-              <label 
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
+              <label className="block mb-2 text-sm font-semibold">Email Address</label>
               <input
                 type="email"
-                id="email"
                 name="email"
-                value={formData.email}
+                value={form.email}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-blue-500"
               />
             </div>
-
             <div>
-              <label 
-                htmlFor="subject"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Subject
-              </label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              />
-            </div>
-
-            <div>
-              <label 
-                htmlFor="message"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Message
-              </label>
+              <label className="block mb-2 text-sm font-semibold">Message</label>
               <textarea
-                id="message"
                 name="message"
-                value={formData.message}
+                value={form.message}
                 onChange={handleChange}
+                rows="5"
                 required
-                rows={4}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              />
+                className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-blue-500"
+              ></textarea>
             </div>
-
             <button
               type="submit"
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white font-semibold"
             >
               Send Message
             </button>
+            {status && <p className="text-green-400 text-sm mt-2">{status}</p>}
           </form>
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};
 
 export default Contact;
