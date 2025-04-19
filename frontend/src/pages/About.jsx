@@ -14,7 +14,7 @@ const teamMembers = [
     name: 'Ian Muriuki',
     role: 'Frontend Developer & UI/UX Designer',
     bio: `Ian crafted the user experience and built the frontend in React + Tailwind. He ensures that AgriVision is intuitive and accessible for all users. Ian believes in the power of design to bridge the gap between people and technology.`,
-    image: '/team/ian.jpg',
+    image: '/images/me.jpeg',
     university: 'Technical University of Mombasa',
   },
 ];

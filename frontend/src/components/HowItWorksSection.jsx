@@ -1,22 +1,25 @@
-import React from 'react';
-import { FaUpload, FaMicroscope, FaChartLine } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import React from "react";
+import { FaUpload, FaMicroscope, FaChartLine } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const steps = [
   {
     icon: <FaUpload size={26} />,
-    title: '1. Upload Media',
-    description: 'Capture images or videos of your crops using a drone or mobile and upload them to the platform.',
+    title: "1. Upload Media",
+    description:
+      "Capture images or videos of your crops using a drone or mobile and upload them to the platform.",
   },
   {
     icon: <FaMicroscope size={26} />,
-    title: '2. AI Analysis',
-    description: 'Our AI models analyze the uploaded media to detect diseases or count fruits with high precision.',
+    title: "2. AI Analysis",
+    description:
+      "Our AI models analyze the uploaded media to detect diseases or count fruits with high precision.",
   },
   {
     icon: <FaChartLine size={26} />,
-    title: '3. Get Insights',
-    description: 'View predictions, confidence scores, and visual outputs to make smart, data-driven decisions.',
+    title: "3. Get Insights",
+    description:
+      "View predictions, confidence scores, and visual outputs to make smart, data-driven decisions.",
   },
 ];
 
@@ -49,7 +52,9 @@ const HowItWorksSection = () => {
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-1">{step.title}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">{step.description}</p>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  {step.description}
+                </p>
               </div>
             </motion.div>
           ))}
