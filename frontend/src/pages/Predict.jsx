@@ -22,7 +22,7 @@ const Predict = () => {
 
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/predict/disease/`, formData);
-      setDiseaseResult(res.data); // response is flat dict
+      setDiseaseResult(res.data);
     } catch (err) {
       console.error('Disease prediction error:', err);
       alert('Disease prediction failed. Try again.');
@@ -53,41 +53,46 @@ const Predict = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white py-12 px-4 sm:px-8 space-y-20">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white py-12 px-4 sm:px-8 space-y-24">
+      
       {/* Disease Detection Section */}
-      <section className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold mb-6">🌿 Disease Detection</h2>
-        <form onSubmit={handleDiseaseSubmit} className="mb-6 space-y-4">
+      <section className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center">
+          <h2 className="text-4xl font-bold mb-2">🌿 Disease Detection</h2>
+          <p className="text-gray-400">Upload a plant image to analyze disease conditions.</p>
+        </div>
+
+        <form onSubmit={handleDiseaseSubmit} className="flex flex-col sm:flex-row gap-4 items-center justify-center">
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setDiseaseFile(e.target.files[0])}
-            className="w-full text-sm text-gray-300"
+            className="w-full sm:w-1/2 text-sm text-gray-300 bg-gray-800 p-2 rounded-md border border-gray-700"
           />
           <button
             type="submit"
             disabled={!diseaseFile || diseaseLoading}
-            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-md disabled:opacity-50 transition"
           >
-            {diseaseLoading ? 'Analyzing...' : 'Submit'}
+            {diseaseLoading ? 'Analyzing...' : 'Analyze'}
           </button>
         </form>
 
         {diseaseResult && (
-          <div className="grid md:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-xl shadow-lg">
-            <div>
-              <h4 className="text-lg font-semibold mb-2">Input Image</h4>
-              <img src={URL.createObjectURL(diseaseFile)} alt="Input" className="rounded-md" />
+          <div className="grid md:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-xl shadow-xl border border-gray-800">
+            <div className="space-y-2">
+              <h4 className="text-xl font-semibold">📷 Input Image</h4>
+              <img src={URL.createObjectURL(diseaseFile)} alt="Input" className="rounded-md shadow-md" />
             </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-2">Disease Prediction Details</h4>
-              <ul className="space-y-2 text-base">
-                <li><strong>Label:</strong> {diseaseResult.label}</li>
-                <li><strong>Confidence:</strong> {(diseaseResult.confidence * 100).toFixed(2)}%</li>
-                <li><strong>Plant:</strong> {diseaseResult.plant}</li>
-                <li><strong>Disease:</strong> {diseaseResult.disease}</li>
-                <li><strong>Control Measures:</strong> {diseaseResult.control_measures}</li>
-                <li><strong>Chemicals:</strong> {diseaseResult.chemicals}</li>
+            <div className="space-y-4">
+              <h4 className="text-xl font-semibold">🧪 Prediction Details</h4>
+              <ul className="space-y-1 text-base text-gray-300">
+                <li><span className="font-bold text-white">Label:</span> {diseaseResult.label}</li>
+                <li><span className="font-bold text-white">Confidence:</span> {(diseaseResult.confidence * 100).toFixed(2)}%</li>
+                <li><span className="font-bold text-white">Plant:</span> {diseaseResult.plant}</li>
+                <li><span className="font-bold text-white">Disease:</span> {diseaseResult.disease}</li>
+                <li><span className="font-bold text-white">Control Measures:</span> {diseaseResult.control_measures}</li>
+                <li><span className="font-bold text-white">Chemicals:</span> {diseaseResult.chemicals}</li>
               </ul>
             </div>
           </div>
@@ -95,65 +100,66 @@ const Predict = () => {
       </section>
 
       {/* Fruit Counting Section */}
-      <section className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold mb-6">🍎 Fruit Counting</h2>
-        <form onSubmit={handleFruitSubmit} className="mb-6 space-y-4">
+      <section className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center">
+          <h2 className="text-4xl font-bold mb-2">🍎 Fruit Counting</h2>
+          <p className="text-gray-400">Upload an image or video to count fruits in the input.</p>
+        </div>
+
+        <form onSubmit={handleFruitSubmit} className="flex flex-col sm:flex-row gap-4 items-center justify-center">
           <input
             type="file"
             accept="image/*,video/*"
             onChange={(e) => setFruitFile(e.target.files[0])}
-            className="w-full text-sm text-gray-300"
+            className="w-full sm:w-1/2 text-sm text-gray-300 bg-gray-800 p-2 rounded-md border border-gray-700"
           />
           <button
             type="submit"
             disabled={!fruitFile || fruitLoading}
-            className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md disabled:opacity-50"
+            className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-md disabled:opacity-50 transition"
           >
-            {fruitLoading ? 'Counting...' : 'Submit'}
+            {fruitLoading ? 'Counting...' : 'Count'}
           </button>
         </form>
 
         {fruitResult && (
-          <div className="grid md:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-xl shadow-lg">
-            {/* Input File Preview */}
-            <div>
-              <h4 className="text-lg font-semibold mb-2">Input</h4>
+          <div className="grid md:grid-cols-2 gap-6 bg-gray-900 p-6 rounded-xl shadow-xl border border-gray-800">
+            <div className="space-y-2">
+              <h4 className="text-xl font-semibold">📷 Input Preview</h4>
               {fruitFile?.type?.startsWith("video") ? (
                 <video
                   src={URL.createObjectURL(fruitFile)}
                   controls
-                  className="rounded-md w-full max-h-[400px]"
+                  className="rounded-md w-full max-h-[400px] shadow"
                 />
               ) : (
                 <img
                   src={URL.createObjectURL(fruitFile)}
                   alt="Input"
-                  className="rounded-md"
+                  className="rounded-md shadow"
                 />
               )}
             </div>
 
-            {/* Annotated Detection Output */}
-            <div>
-              <h4 className="text-lg font-semibold mb-2">Detection Result</h4>
+            <div className="space-y-2">
+              <h4 className="text-xl font-semibold">🧠 Detection Output</h4>
               {fruitFile?.type?.startsWith("video") ? (
                 <video
                   src={fruitResult?.preview_inline || fruitResult?.media_url}
                   controls
-                  className="rounded-md w-full max-h-[400px]"
+                  className="rounded-md w-full max-h-[400px] shadow"
                 />
               ) : (
                 <img
                   src={fruitResult?.preview_inline || fruitResult?.media_url}
                   alt="Detected"
-                  className="rounded-md"
+                  className="rounded-md shadow"
                 />
               )}
             </div>
 
-            {/* Fruit Count Summary */}
-            <div className="col-span-2 mt-4 text-center text-lg">
-              <p><strong>Fruits Counted:</strong> {fruitResult.count}</p>
+            <div className="col-span-2 mt-4 text-center text-xl text-white font-semibold">
+              ✅ Fruits Counted: <span className="text-green-400">{fruitResult.count}</span>
             </div>
           </div>
         )}
