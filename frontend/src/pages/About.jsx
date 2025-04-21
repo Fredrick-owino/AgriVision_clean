@@ -7,17 +7,40 @@ const teamMembers = [
     name: 'Fredrick Onyango',
     role: 'Backend Lead & AI Specialist',
     bio: `Fredrick is passionate about combining deep learning with real-world applications. He spearheaded the development of AgriVision’s disease detection and fruit counting models using TensorFlow and YOLO. Beyond code, he's an innovator driving sustainable tech in agriculture.`,
-    image: '/team/fredrick.jpg',
+    image: '/images/me.jpeg',
     university: 'Technical University of Mombasa',
   },
   {
     name: 'Ian Muriuki',
     role: 'Frontend Developer & UI/UX Designer',
     bio: `Ian crafted the user experience and built the frontend in React + Tailwind. He ensures that AgriVision is intuitive and accessible for all users. Ian believes in the power of design to bridge the gap between people and technology.`,
-    image: '/team/ian.jpg',
+    image: '/images/me.jpeg',
     university: 'Technical University of Mombasa',
   },
 ];
+
+const TeamCard = ({ member }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+    className="bg-gray-900 p-6 rounded-2xl text-left shadow-lg"
+  >
+    <div className="flex gap-4 items-start">
+      <img
+        src={member.image}
+        alt={`${member.name}'s profile picture`}
+        className="h-20 w-20 rounded-full object-cover border-2 border-blue-500"
+      />
+      <div>
+        <h3 className="text-lg font-bold text-white">{member.name}</h3>
+        <p className="text-sm text-blue-400">{member.role}</p>
+        <p className="text-xs text-gray-400 mb-2">{member.university}</p>
+      </div>
+    </div>
+    <p className="mt-4 text-sm text-gray-300 leading-relaxed">{member.bio}</p>
+  </motion.div>
+);
 
 const AboutPage = () => {
   return (
@@ -58,7 +81,12 @@ const AboutPage = () => {
           </motion.p>
 
           {/* Vision & Mission */}
-          <div className="grid md:grid-cols-2 gap-10 text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="grid md:grid-cols-2 gap-10 text-left"
+          >
             <div className="bg-gray-900 p-6 rounded-xl shadow-md">
               <div className="flex items-center gap-3 text-blue-400 mb-2">
                 <FaRocket />
@@ -77,7 +105,7 @@ const AboutPage = () => {
                 To simplify precision agriculture by offering AI-based crop health diagnostics and real-time fruit counting through drone imagery and computer vision.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Team Section */}
@@ -87,27 +115,22 @@ const AboutPage = () => {
           </h2>
           <div className="grid sm:grid-cols-2 gap-10 max-w-5xl mx-auto">
             {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-900 p-6 rounded-2xl text-left shadow-lg"
+              <TeamCard key={index} member={member} />
+            ))}
+          </div>
+        </div>
+
+        {/* Tech Stack */}
+        <div className="bg-black text-white py-12 px-6">
+          <h3 className="text-2xl font-semibold text-center mb-8">Tech Stack</h3>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-300">
+            {['TensorFlow', 'YOLOv8', 'React', 'Tailwind CSS', 'Drone Imagery'].map((tech) => (
+              <span
+                key={tech}
+                className="bg-gray-800 px-4 py-2 rounded-full border border-gray-700"
               >
-                <div className="flex gap-4 items-start">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="h-20 w-20 rounded-full object-cover border-2 border-blue-500"
-                  />
-                  <div>
-                    <h3 className="text-lg font-bold text-white">{member.name}</h3>
-                    <p className="text-sm text-blue-400">{member.role}</p>
-                    <p className="text-xs text-gray-400 mb-2">{member.university}</p>
-                  </div>
-                </div>
-                <p className="mt-4 text-sm text-gray-300 leading-relaxed">{member.bio}</p>
-              </motion.div>
+                {tech}
+              </span>
             ))}
           </div>
         </div>

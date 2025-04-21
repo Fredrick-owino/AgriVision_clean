@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
   return (
@@ -26,7 +26,8 @@ const HeroSection = () => {
           <span className="text-blue-400">with Artificial Intelligence</span>
         </h1>
         <p className="text-lg md:text-xl text-gray-300 mb-8">
-          AgriVision empowers farmers and researchers with real-time crop disease detection and fruit counting using drone-based AI.
+          AgriVision empowers farmers and researchers with real-time crop
+          disease detection and fruit counting using drone-based AI.
         </p>
 
         <div className="flex justify-center space-x-4 flex-wrap gap-4">
