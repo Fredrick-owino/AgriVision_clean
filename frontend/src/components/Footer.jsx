@@ -55,6 +55,8 @@ const Footer = () => {
           </ul>
         </div>
 
+
+ {/*TODO implement the newsletter subscription functionality to send emails to the user? */}
         {/* Newsletter / Feature */}
         <div>
           <h3 className="text-white text-lg font-semibold mb-4">Stay Updated</h3>

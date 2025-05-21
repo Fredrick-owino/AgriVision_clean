@@ -5,16 +5,16 @@ import { motion } from 'framer-motion';
 const teamMembers = [
   {
     name: 'Fredrick Onyango',
-    role: 'Backend Lead & AI Specialist',
+    role: 'Founder - AI Engineer',
     bio: `Fredrick is passionate about combining deep learning with real-world applications. He spearheaded the development of AgriVision’s disease detection and fruit counting models using TensorFlow and YOLO. Beyond code, he's an innovator driving sustainable tech in agriculture.`,
-    image: '/images/me.jpeg',
+    image: '/images/me2.jpeg',
     university: 'Technical University of Mombasa',
   },
   {
     name: 'Ian Muriuki',
-    role: 'Frontend Developer & UI/UX Designer',
+    role: 'Co-Founder - Software Developer',
     bio: `Ian crafted the user experience and built the frontend in React + Tailwind. He ensures that AgriVision is intuitive and accessible for all users. Ian believes in the power of design to bridge the gap between people and technology.`,
-    image: '/images/me.jpeg',
+    image: '/images/me1.jpeg',
     university: 'Technical University of Mombasa',
   },
 ];
