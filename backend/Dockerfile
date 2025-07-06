@@ -17,11 +17,10 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the backend code
+# Copy the backend code including wait-for-it.sh
 COPY . .
 
 # Ensure wait-for-it script is executable
-COPY ../wait-for-it.sh /app/wait-for-it.sh
 RUN chmod +x /app/wait-for-it.sh
 
 # Expose Django port

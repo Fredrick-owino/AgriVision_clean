@@ -51,6 +51,7 @@ zipp==3.21.0
 ultralytics==8.3.107
 torch>=2.0
 
+python-dotenv
 
 
 opencv-python==4.11.0.86

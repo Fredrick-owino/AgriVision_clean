@@ -1,21 +1,19 @@
 """
 URL configuration for Agrivision project.
 
-The `urlpatterns` list routes URLs to views. For more information:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-
-Includes:
+Routes:
 - Admin dashboard
-- YOLOv8 image & video detection endpoints
-- API schema (OpenAPI 3.0)
-- Swagger UI docs
-- ReDoc API documentation
+- API endpoints (YOLOv8 detection, etc.)
+- OpenAPI/Swagger docs
+- Media files including videos (processed/, tmp/)
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve as static_serve
+import os
 
 # OpenAPI and documentation views
 from drf_spectacular.views import (
@@ -28,19 +26,25 @@ urlpatterns = [
     # Admin interface
     path('admin/', admin.site.urls),
 
-    # API routes (e.g., YOLO inference)
+    # API routes
     path('api/', include('api.urls')),
 
-    # OpenAPI schema generation
+    # OpenAPI schema and docs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-
-    # Interactive Swagger UI
     path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-
-    # ReDoc alternative documentation
     path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
-# Serve media files during development
+# Serve media files correctly during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    # Explicitly serve processed/ and tmp/ directories with proper headers
+    urlpatterns += [
+        re_path(r'^media/processed/(?P<path>.*)$', static_serve, {
+            'document_root': os.path.join(settings.MEDIA_ROOT, 'processed'),
+        }),
+        re_path(r'^media/tmp/(?P<path>.*)$', static_serve, {
+            'document_root': os.path.join(settings.MEDIA_ROOT, 'tmp'),
+        }),
+    ]

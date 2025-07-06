@@ -1,17 +1,23 @@
-FROM node:20-alpine
+FROM node:20-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy dependency files and install
-COPY package.json package-lock.json ./
-RUN npm install
+# Optional system dependencies for build tools
+RUN apt-get update && apt-get install -y \
+    git python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy app files
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copy app source
 COPY . .
 
-# Expose frontend dev port
+# Expose dev server port
 EXPOSE 5173
 
-# Start the dev server (hot reload)
-CMD ["npm", "run", "dev", "--", "--host"]
+ARG NODE_ENV=development
+ENV NODE_ENV=$NODE_ENV
+
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = 'development' ]; then npm run dev -- --host; else npm run build && npm run preview -- --host; fi"]

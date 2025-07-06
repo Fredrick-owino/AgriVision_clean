@@ -1,23 +1,19 @@
 version: '3.8'
+
 services:
   web:
     build: ./backend
     volumes:
       - ./backend:/app
       - ./models:/app/models
-      - ./media:/app/media 
+      - ./media:/app/media
     ports:
       - "8000:8000"
-    environment:
-      POSTGRES_DB: agrivision_dev
-      POSTGRES_USER: fredrick          
-      POSTGRES_PASSWORD: Fr3dr1ck0w7n0  
-      DB_HOST: db
-      DB_PORT: 5432
-      PYTHONPATH: "/app"
+    env_file:                     # ✅ Load environment variables from .env.dev
+      - .env.dev
     depends_on:
       - db
-    restart: unless-stopped  
+    restart: unless-stopped
 
   db:
     image: postgres:15
@@ -25,17 +21,23 @@ services:
       - "5433:5432"
     environment:
       POSTGRES_DB: agrivision_dev
-      POSTGRES_USER: fredrick           
-      POSTGRES_PASSWORD: Fr3dr1ck0w7n0  
+      POSTGRES_USER: fredrick
+      POSTGRES_PASSWORD: Fr3dr1ck0w7n0
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        NODE_ENV: development
+    working_dir: /app
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
+    env_file:
+      - .env.dev
     depends_on:
       - web
     restart: unless-stopped
