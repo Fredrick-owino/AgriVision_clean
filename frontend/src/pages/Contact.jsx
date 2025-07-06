@@ -12,7 +12,6 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulate form submission
     setTimeout(() => {
       setStatus('Thank you for reaching out! We will get back to you shortly.');
       setForm({ name: '', email: '', message: '' });
@@ -22,6 +21,7 @@ const Contact = () => {
   return (
     <section className="bg-black text-white min-h-screen py-20 px-6 sm:px-12">
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold mb-4">Get in Touch</h1>
           <p className="text-gray-400 max-w-xl mx-auto">
@@ -29,9 +29,10 @@ const Contact = () => {
           </p>
         </div>
 
+        {/* Contact Grid */}
         <div className="grid md:grid-cols-2 gap-10">
           {/* Contact Info */}
-          <div className="bg-gray-900 p-8 rounded-xl shadow-md space-y-6">
+          <div className="bg-gray-900 p-8 rounded-2xl shadow-xl space-y-6">
             <div className="flex items-start gap-4">
               <FaPhoneAlt className="text-blue-400 mt-1" />
               <div>
@@ -50,13 +51,13 @@ const Contact = () => {
               <FaMapMarkerAlt className="text-blue-400 mt-1" />
               <div>
                 <h3 className="text-lg font-semibold">Location</h3>
-                <p className="text-gray-300"> Mombasa, Kenya</p>
+                <p className="text-gray-300">Mombasa, Kenya</p>
               </div>
             </div>
           </div>
 
           {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="bg-gray-900 p-8 rounded-xl shadow-md space-y-6">
+          <form onSubmit={handleSubmit} className="bg-gray-900 p-8 rounded-2xl shadow-xl space-y-6">
             <div>
               <label className="block mb-2 text-sm font-semibold">Your Name</label>
               <input
@@ -98,6 +99,22 @@ const Contact = () => {
             </button>
             {status && <p className="text-green-400 text-sm mt-2">{status}</p>}
           </form>
+        </div>
+
+        {/* Google Maps Embed */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-4 text-center">Our Location</h2>
+          <div className="rounded-xl overflow-hidden shadow-xl">
+            <iframe
+              title="AgriVision Mombasa Location"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15955.406243814534!2d39.66820581657778!3d-4.043477241858756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1840133f1d8e1cbb%3A0x9c7428ae546e1f0c!2sMombasa%2C%20Kenya!5e0!3m2!1sen!2ske!4v1681741315210!5m2!1sen!2ske"
+              width="100%"
+              height="400"
+              allowFullScreen=""
+              loading="lazy"
+              className="w-full h-[400px] border-none"
+            ></iframe>
+          </div>
         </div>
       </div>
     </section>
