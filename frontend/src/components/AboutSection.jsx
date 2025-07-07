@@ -53,20 +53,21 @@ const AboutSection = () => {
       color: 'purple',
       gradient: 'from-purple-500 to-violet-500'
     },
-    {
-      icon: Zap,
-      title: 'Real-time Intelligence',
-      description: 'Transforming reactive farming into proactive agriculture with instant insights from drone-powered AI analysis.',
-      color: 'orange',
-      gradient: 'from-orange-500 to-red-500'
-    },
-    {
-      icon: Shield,
-      title: 'Scalable Solutions',
-      description: 'Building robust, enterprise-grade technology that scales from individual farms to continental agricultural networks.',
-      color: 'indigo',
-      gradient: 'from-indigo-500 to-blue-500'
-    }
+    //TODO uPdate our core values 
+    // {
+    //   icon: Zap,
+    //   title: 'Real-time Intelligence',
+    //   description: 'Transforming reactive farming into proactive agriculture with instant insights from drone-powered AI analysis.',
+    //   color: 'orange',
+    //   gradient: 'from-orange-500 to-red-500'
+    // },
+    // {
+    //   icon: Shield,
+    //   title: 'Scalable Solutions',
+    //   description: 'Building robust, enterprise-grade technology that scales from individual farms to continental agricultural networks.',
+    //   color: 'indigo',
+    //   gradient: 'from-indigo-500 to-blue-500'
+    // }
   ];
 
   const founders = [
@@ -77,7 +78,7 @@ const AboutSection = () => {
       avatar: 'FO',
       gradient: 'from-blue-600 via-purple-600 to-blue-800',
       expertise: ['TensorFlow', 'Computer Vision', 'Agricultural AI'],
-      achievement: 'IEEE Dataport Hackathon Winner 2025'
+      achievement: 'IEEE Dataport Summit Winner 2025'
     },
     {
       name: 'Ian Muriuki',
@@ -86,10 +87,10 @@ const AboutSection = () => {
       avatar: 'IM',
       gradient: 'from-emerald-600 via-teal-600 to-green-800',
       expertise: ['React', 'Django', 'System Architecture'],
-      achievement: 'Technical University of Mombasa Excellence Award'
+      achievement: 'IEEE Summit Excellence Award'
     },
     {
-      name: 'Dr. Sarah Kimani',
+      name: 'Dr. Sarah Sarah',
       role: 'Co-Founder & Agricultural Scientist',
       bio: 'Bridging traditional farming wisdom with modern technology to create sustainable agricultural solutions.',
       avatar: 'SK',
@@ -116,7 +117,7 @@ const AboutSection = () => {
           <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-green-500/10 border border-blue-500/20 mb-8">
             <Award className="w-4 h-4 text-blue-500" />
             <span className={`text-sm font-medium ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
-              IEEE Dataport Hackathon 2025 Winners
+              Precision Farming with AI
             </span>
           </div>
 
@@ -125,7 +126,7 @@ const AboutSection = () => {
           }`}>
             <span className="block">Revolutionizing</span>
             <span className="bg-gradient-to-r from-blue-600 via-green-600 to-purple-600 bg-clip-text text-transparent">
-              African Agriculture
+             Agriculture in Africa
             </span>
           </h1>
 
@@ -172,7 +173,7 @@ const AboutSection = () => {
           <p className={`text-lg md:text-xl leading-relaxed max-w-5xl mx-auto ${
             isDark ? 'text-gray-300' : 'text-gray-600'
           }`}>
-            We believe that every farmer, regardless of farm size or location, deserves access to the same 
+            We believe that every farmer, regardless of their farm size or location, deserves access to the same 
             advanced monitoring and analysis tools used by the world's largest agricultural operations. 
             Through accessible AI technology and drone-powered insights, we're democratizing precision 
             agriculture to build a more sustainable future for food production across Africa.
@@ -323,7 +324,7 @@ const AboutSection = () => {
         } backdrop-blur-sm`}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { value: '94%+', label: 'Detection Accuracy', icon: Target },
+              { value: '94.2%+', label: 'Detection Accuracy', icon: Target },
               { value: '38', label: 'Disease Classes', icon: Shield },
               { value: '60K+', label: 'Training Images', icon: Zap },
               { value: '3', label: 'UN SDGs Supported', icon: Globe }

@@ -29,9 +29,9 @@ const HeroSection = () => {
   }, []);
 
   const features = [
-    { icon: BarChart3, text: '94% Detection Accuracy', color: 'text-blue-600 dark:text-blue-400' },
-    { icon: Shield, text: 'Early Disease Detection', color: 'text-green-600 dark:text-green-400' },
-    { icon: Zap, text: 'Real-time Analysis', color: 'text-purple-600 dark:text-purple-400' },
+    // { icon: BarChart3, text: '94% Detection Accuracy', color: 'text-blue-600 dark:text-blue-400' },
+    // { icon: Shield, text: 'Early Disease Detection', color: 'text-green-600 dark:text-green-400' },
+    // { icon: Zap, text: 'Real-time Analysis', color: 'text-purple-600 dark:text-purple-400' },
   ];
 
   const stats = [
@@ -66,8 +66,8 @@ const HeroSection = () => {
           <h1 className={`text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight ${
             isDark ? 'text-white' : 'text-gray-900'
           }`}>
-            <span className="block mb-2">Smart Farming</span>
-            <span className="text-gradient">Powered by AI</span>
+            <span className="block mb-2">AgriVision</span>
+            <span className="text-gradient">Smart Farming Powered by AI</span>
           </h1>
 
           {/* Subtitle */}
