@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Github, Linkedin, Twitter, Mail, MapPin, Calendar, Send, Heart, Leaf, ArrowRight } from 'lucide-react';
+import { Github, Linkedin, Twitter, Mail, MapPin, Calendar, Send, Heart, Leaf, ArrowRight, Facebook } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Footer = () => {
@@ -19,7 +19,8 @@ const Footer = () => {
   const socialLinks = [
     { icon: Github, href: '#', label: 'GitHub', color: 'hover:text-gray-900 dark:hover:text-white' },
     { icon: Linkedin, href: '#', label: 'LinkedIn', color: 'hover:text-blue-600' },
-    { icon: Twitter, href: '#', label: 'Twitter', color: 'hover:text-blue-400' }
+    { icon: Twitter, href: '#', label: 'Twitter', color: 'hover:text-blue-400' },
+    { icon: Facebook, href: '#', label: 'Facebook', color: 'hover:text-blue-600'}
   ];
 
   const quickLinks = [
